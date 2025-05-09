@@ -20,19 +20,19 @@ db.restaurants.find({"grades.score": {$gt: 80, $lt: 100}})
 db.restaurants.find({"address.coord.0": {$lt: -95.754168}})
 //11.Escribe una consulta de MongoDB para encontrar los restaurantes que no cocinan comida 'American' y tienen algún resultado superior a 70 y latitud inferior a -65.754168
 db.restaurants.find({
-    cuisine: {$ne: "American "},
+    cuisine: {$ne: "American"},
     "grades.score": {$gt: 70},
     "address.coord.1": {$lt: -65.754168}
   })
 //12Escribe una consulta para encontrar los restaurantes que no preparan comida 'American' y tienen algún resultado superior a 70 y que, además, se localizan en longitudes inferiores a -65.754168. Nota : Realiza esta consulta sin utilizar operador $and.
 db.restaurants.find({
-    cuisine: {$ne: "American "},
+    cuisine: {$ne: "American"},
     "grades.score": {$gt: 70},
     "address.coord.0": {$lt: -65.754168}
   })
 //13.Escribe una consulta para encontrar los restaurantes que no preparan comida 'American', tienen alguna nota 'A' y no pertenecen a Brooklyn. Se debe mostrar el documento según la cuisine en orden descendente
 db.restaurants.find({
-    cuisine: {$ne: "American "},
+    cuisine: {$ne: "American"},
     "grades.grade": "A",
     borough: {$ne: "Brooklyn"}
   }).sort({cuisine: -1})
@@ -73,10 +73,18 @@ db.restaurants.find(
   )
 //21.Escribe una consulta para encontrar el restaurante_id, name, borough y cuisine para aquellos restaurantes que preparan marisco ('seafood') excepto si son 'American', 'Chinese' o el name del restaurante comienza con letras 'Wil'.
 db.restaurants.find({
-    cuisine: "seafood",
-    cuisine: {$nin: ["American ", "Chinese"]},
-    name: {$not: /^Wil/}
-  }, {restaurant_id: 1, name: 1, borough: 1, cuisine: 1})
+    $and: [
+        { cuisine: "seafood" },
+        { cuisine: { $nin: ["American ", "Chinese"] } },
+        { name: { $not: /^Wil/ } }
+    ]
+}, {
+    restaurant_id: 1,
+    name: 1,
+    borough: 1,
+    cuisine: 1,
+    _id: 0
+})
 //22.Escribe una consulta para encontrar el restaurante_id, name y gradas para aquellos restaurantes que consigan un grade de "A" y un resultado de 11 con un ISODate "2014-08-11T00:00:00Z".
 db.restaurants.find({
     "grades": {
